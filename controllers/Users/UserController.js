@@ -11,7 +11,7 @@ exports.findOne = (req,res,next) => {
 
 exports.updateOne = (req,res,next) => {
     try{
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true})
+        const updatedUser = User.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true})
         res.status(200).json(updatedUser)
     }catch(err){
         res.status(500).json(err)
@@ -20,7 +20,7 @@ exports.updateOne = (req,res,next) => {
 
 exports.deleteOne = (req,res,next) => {
     try{
-        await User.findByIdAndDelete(req.params.id)
+        User.findByIdAndDelete(req.params.id)
         res.status(200).json("The user has been deleted")
     } catch(err) {
         res.status(500).json(err)
