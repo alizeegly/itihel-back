@@ -6,7 +6,6 @@ const Category = require("../../models/Courses/Category")
 const CourseShared = require("../../models/Courses/CourseShared")
 const User = require("../../models/Users/User")
 const Role = require("../../models/Users/Role")
-const auth = require("../../middleware/auth")
 
 /**
  * @method - POST
