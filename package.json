@@ -15,29 +15,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "3d-react-carousal": "^5.0.0",
     "@hapi/joi": "^17.1.1",
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
     "connect-mongodb-session": "^3.1.1",
-    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "dotenv": "^12.0.4",
     "express": "^4.17.1",
     "express-rate-limit": "^6.4.0",
     "express-session": "^1.17.2",
     "helmet": "^5.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "material-ui-confirm": "^3.0.3",
     "mongoose": "^6.0.12",
     "mongoose-find-and-filter": "^1.0.0",
     "nodemailer": "^6.7.2",
-    "nodemon": "^2.0.14",
-    "passport": "^0.5.0",
-    "passport-local-mongoose": "^6.1.0",
-    "react-multi-carousel": "^2.8.0",
-    "react-quiz-component": "^0.3.9"
+    "nodemon": "^2.0.14"
   },
   "engines": {
     "node": "14.17.6"
