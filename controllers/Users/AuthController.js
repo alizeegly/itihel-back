@@ -8,7 +8,7 @@ exports.isAuth = (req,res,next) => {
     if(sessUser) {
         next();
     } else {
-        err = res.status(401).json("You Need to Be Logged in to do this. Access Denied ")
+        err = res.status(401).json({ msg: "You Need to Be Logged in to do this. Access Denied "})
         return err;
     }
 };
@@ -64,11 +64,11 @@ exports.loginUser = (req, res) => {
     if(!result.error) {
         //check for existing user
         User.findOne({ email }).then((user) => {
-            if (!user) return res.status(400).json("Incorrect Email or Password");
+            if (!user) return res.status(400).json({msg: "Incorrect Email or Password"});
     
             // Validate password
             bcrypt.compare(password, user.password).then((isMatch) => {
-                if (!isMatch) return res.status(400).json("Incorrect Email or Password");
+                if (!isMatch) return res.status(400).json({msg: "Incorrect Email or Password"});
         
                 const sessUser = { 
                     id: user.id, 
@@ -85,18 +85,18 @@ exports.loginUser = (req, res) => {
             });
         });
     } else {
-        console.log(result.error)
-        res.status(422).json(result.error.details[0].message);
+        // console.log(result.error)
+        res.status(422).json({msg: result.error.details[0].message});
     }
 };
 
 
 exports.logoutUser = (req, res) => {
     req.session.destroy((err) => {
-      // delete session data from store, using sessionID in cookie
-      if (err) throw err;
-      res.clearCookie("session-id"); // clears cookie containing expired sessionID
-      res.send("Logged out successfully");
+        // delete session data from store, using sessionID in cookie
+        if (err) throw err;
+        res.clearCookie("itihel"); // clears cookie containing expired sessionID
+        res.json("Logged out successfully");
     });
 }
   

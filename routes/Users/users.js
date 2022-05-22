@@ -16,7 +16,7 @@ const { registerLimiter, loginLimiter } = require("../../utils/rateLimiter");
  * @param - /signup
  * @description - User register
  */
-router.post("/signup", registerLimiter, registerUser );
+router.post("/register", registerLimiter, registerUser );
 
 /**
  * @method - POST
