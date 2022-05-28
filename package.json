@@ -24,6 +24,7 @@
     "express-rate-limit": "^6.4.0",
     "express-session": "^1.17.2",
     "helmet": "^5.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "mongoose-find-and-filter": "^1.0.0",
     "nodemailer": "^6.7.2",

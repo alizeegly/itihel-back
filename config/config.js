@@ -10,4 +10,5 @@ module.exports = {
     DB_CLUSTER: process.env.DB_CLUSTER,
     SESS_SECRET: process.env.SESS_SECRET,
     COOKIE_NAME: process.env.COOKIE_NAME,
+    JWTSECRET: process.env.JWTSECRET
 };

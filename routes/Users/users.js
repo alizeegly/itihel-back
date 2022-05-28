@@ -4,9 +4,10 @@ const router = express.Router();
 
 const User = require("../../models/Users/User");
 const nodemailer = require('nodemailer');
+const auth = require("../../middlewares/auth");
 
 
-const { registerUser, loginUser, logoutUser, authChecker } = require("../../controllers/Users/AuthController");
+const { registerUser, loginUser, logoutUser, authChecker, auth2 } = require("../../controllers/Users/AuthController");
 const { findOne, publicCourses, deleteOne, updateOne, privateCourses, courses, all, loggedUser } = require("../../controllers/Users/UserController");
 const { registerLimiter, loginLimiter } = require("../../utils/rateLimiter");
 
@@ -40,6 +41,16 @@ router.delete("/logout", logoutUser );
 router.get("/authchecker", authChecker );
 
 /**
+ * @method - GET
+ * @param - /
+ * @description - Get user by token/ Loading user
+ */
+ router.get("/auth", auth, auth2)
+
+
+
+
+ /**
  * @method - GET
  * @description - Get User by Id
  * @param - /:id
@@ -108,66 +119,66 @@ router.get("/", all)
 /**
  * @method - PUT
  * @param - /:id
- * @description - User update
+ * @description - forgot user password
  */
- router.put("/:id/reset-password", async (req, res) => {
-    try{
-        const salt = await bcrypt.genSalt(10);
-        const password = await bcrypt.hash(req.body.password, salt);
-        const updatedUser = await User.findByIdAndUpdate({ _id: req.params.id }, {
-            password: password
-        })
-        res.status(200).json(updatedUser)
-    }catch(err){
-        res.status(500).json(err)
-    }
-})
+//  router.put("/:id/reset-password", async (req, res) => {
+//     try{
+//         const salt = await bcrypt.genSalt(10);
+//         const password = await bcrypt.hash(req.body.password, salt);
+//         const updatedUser = await User.findByIdAndUpdate({ _id: req.params.id }, {
+//             password: password
+//         })
+//         res.status(200).json(updatedUser)
+//     }catch(err){
+//         res.status(500).json(err)
+//     }
+// })
 
-router.post('/forgotPassword', async(req, res) => {
-    console.log("")
-    console.log("")
-    console.log("")
-    if (req.body.email === '') {
-        console.log("email required")
-        res.status(400).send('email required');
-    }
+// router.post('/forgotPassword', async(req, res) => {
+//     console.log("")
+//     console.log("")
+//     console.log("")
+//     if (req.body.email === '') {
+//         console.log("email required")
+//         res.status(400).send('email required');
+//     }
 
-    let range = {min: 100000, max: 999999}
-    let delta = range.max - range.min
-    const newPassword = Math.round(range.min + Math.random() * delta)
-    console.log("newPassword : " + newPassword)
+//     let range = {min: 100000, max: 999999}
+//     let delta = range.max - range.min
+//     const newPassword = Math.round(range.min + Math.random() * delta)
+//     console.log("newPassword : " + newPassword)
 
-    bcrypt.genSalt(10, function(err, salt) {
-        console.log("here")
-        console.log(salt)
-        bcrypt.hashSync(newPassword, salt, function(err, hash) {
-            console.log("there")
-            console.log(hash)
-            User.findOneAndUpdate({ "email": req.body.email.email }, {"$set": {"password": hash}}, { returnNewDocument: true }).then(updatedDocument => {
-                if(updatedDocument) {
-                    console.log(`Mot de passe modifié`)
-                } else {
-                    console.log("No document matches the provided query.")
-                }
-                return updatedDocument
-            })
-            .catch(err => console.error(`Failed to find and update document: ${err}`))
-        });
-    });
-    // const salt = await bcrypt.genSalt(10);
-    // bcrypt.hash(newPassword, salt, function(err, hash) {
-    //     console.log(hash)
-    //     User.findOneAndUpdate({ "email": req.body.email.email }, {"$set": {"password": hash}}, { returnNewDocument: true }).then(updatedDocument => {
-    //         if(updatedDocument) {
-    //             console.log(`Mot de passe modifié`)
-    //         } else {
-    //             console.log("No document matches the provided query.")
-    //         }
-    //         return updatedDocument
-    //     })
-    //     .catch(err => console.error(`Failed to find and update document: ${err}`))
-    // })
-})
+//     bcrypt.genSalt(10, function(err, salt) {
+//         console.log("here")
+//         console.log(salt)
+//         bcrypt.hashSync(newPassword, salt, function(err, hash) {
+//             console.log("there")
+//             console.log(hash)
+//             User.findOneAndUpdate({ "email": req.body.email.email }, {"$set": {"password": hash}}, { returnNewDocument: true }).then(updatedDocument => {
+//                 if(updatedDocument) {
+//                     console.log(`Mot de passe modifié`)
+//                 } else {
+//                     console.log("No document matches the provided query.")
+//                 }
+//                 return updatedDocument
+//             })
+//             .catch(err => console.error(`Failed to find and update document: ${err}`))
+//         });
+//     });
+//     // const salt = await bcrypt.genSalt(10);
+//     // bcrypt.hash(newPassword, salt, function(err, hash) {
+//     //     console.log(hash)
+//     //     User.findOneAndUpdate({ "email": req.body.email.email }, {"$set": {"password": hash}}, { returnNewDocument: true }).then(updatedDocument => {
+//     //         if(updatedDocument) {
+//     //             console.log(`Mot de passe modifié`)
+//     //         } else {
+//     //             console.log("No document matches the provided query.")
+//     //         }
+//     //         return updatedDocument
+//     //     })
+//     //     .catch(err => console.error(`Failed to find and update document: ${err}`))
+//     // })
+// })
 
 
 

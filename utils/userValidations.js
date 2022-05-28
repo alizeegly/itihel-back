@@ -14,22 +14,22 @@ const password = Joi.string().min(4).max(16).pattern(/^[a-zA-Z0-9]/).required().
     'string.max': `Password should have a maximum length of {#limit}`,
 })
 
-const first_name = Joi.string().min(3).max(30).pattern(/^[a-zA-Z' ]{3,20}$/).required().messages({
-    'string.pattern.base': `Your first name can only contain lower and uppercase letters and apostrophes`,
+const first_name = Joi.string().min(3).max(30).required().messages({
+    'string.base': `Your first name can only contain lower and uppercase letters and apostrophes`,
     'string.empty': `First name cannot be an empty field`,
     'string.min': `First name should have a minimum length of {#limit}`,
     'string.max': `First name should have a maximum length of {#limit}`,
 });
 
-const last_name = Joi.string().min(3).max(30).pattern(/^[a-zA-Z' ]{3,20}$/).required().messages({
-    'string.pattern.base': `Your last name can only contain lower and uppercase letters and apostrophes`,
+const last_name = Joi.string().min(3).max(30).required().messages({
+    'string.base': `Your last name can only contain lower and uppercase letters and apostrophes`,
     'string.empty': `Last name cannot be an empty field`,
     'string.min': `Last name should have a minimum length of {#limit}`,
     'string.max': `Last name should have a maximum length of {#limit}`,
 });
 
-const pseudo = Joi.string().min(4).max(30).pattern(/^[a-zA-Z' ]{3,20}$/).required().messages({
-    'string.pattern.base': `Your Pseudo can only contain lower and uppercase letters and apostrophes`,
+const pseudo = Joi.string().min(4).max(30).required().messages({
+    'string.base': `Your Pseudo can only contain lower and uppercase letters and apostrophes`,
     'string.empty': `Pseudo cannot be an empty field`,
     'string.min': `Pseudo should have a minimum length of {#limit}`,
     'string.max': `Pseudo should have a maximum length of {#limit}`,
