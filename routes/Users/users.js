@@ -35,13 +35,6 @@ router.delete("/logout", logoutUser );
 
 /**
  * @method - GET
- * @param - /logout
- * @description - Check if user is Authenticated by reading session data
- */
-router.get("/authchecker", authChecker );
-
-/**
- * @method - GET
  * @param - /
  * @description - Get user by token/ Loading user
  */

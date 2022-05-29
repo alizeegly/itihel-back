@@ -6,17 +6,6 @@ const { registerSchema, loginSchema } = require('../../utils/userValidations')
 const jwt = require("jsonwebtoken");
 var jwtSecret = JWTSECRET;
 
-
-exports.isAuth = (req,res,next) => {
-    const sessUser = req.session.user;
-    if(sessUser) {
-        next();
-    } else {
-        err = res.status(401).json({ msg: "You Need to Be Logged in to do this. Access Denied "})
-        return err;
-    }
-};
-
 exports.auth2 = async (req, res) => {
     console.log(req.user)
     try {
@@ -29,96 +18,81 @@ exports.auth2 = async (req, res) => {
 }
 
 
-exports.registerUser = (req, res) => {
+exports.registerUser = async (req, res) => {
     const { first_name, last_name, pseudo, email, password } = req.body;
-  
-    const result = registerSchema.validate({ first_name, last_name, pseudo, email, password});
-
-    if(!result.error) {
-        // Check for existing user
-        User.findOne({
+    const errors = []
+    
+    try {
+        const result = registerSchema.validate({ first_name, last_name, pseudo, email, password});
+    
+        if(result.error) {
+            result.error.details.forEach(error2 => {
+                errors.push({msg: error2.message})
+            });
+            console.log(errors)
+            return res
+                .status(400)
+                .json({ errors: errors });
+        }
+        // See if user exists
+        let user = await User.findOne({
             $or: [
                 {email: email},
                 {pseudo: pseudo}
             ]
-        }).then((user) => {
-            if (user) return res.status(400).json({ errors: [{ msg: "User already exists" }] });
-    
-            //New User created
-            const newUser = new User({
-                first_name,
-                last_name,
-                pseudo,
-                email,
-                password
-            });
-    
-            //Password hashing
-            bcrypt.genSalt(12, (err, salt) =>
-                bcrypt.hash(newUser.password, salt, (err, hash) => {
-                if (err) throw err;
-    
-                newUser.password = hash;
-                // Save user
-                newUser
-                    .save()
-                    .then(() => {
-                        const payload = {
-                            user: {
-                                id: newUser.id,
-                            },
-                        };
-            
-                        jwt.sign(payload, jwtSecret, { expiresIn: 360000 }, (err, token) => {
-                            if (err) throw err;
-                            res.json({ token });
-                        });
-                    })
-                    .catch((err) => console.log(err));
-                })
-            );
         });
-    } else {
-        res.status(422).json(result.error.details[0].message);
+
+        if (user) {
+            res.status(400).json({ errors: [{ msg: "Un compte existe déjà avec ce pseudo ou cet email" }] });
+        }
+        user = new User({
+            first_name,
+            last_name,
+            pseudo,
+            email,
+            password,
+        });
+
+        //Encrypt Password
+        const salt = await bcrypt.genSalt(10);
+
+        user.password = await bcrypt.hash(password, salt);
+
+        await user.save();
+
+        //Return jsonwebtoken
+        const payload = {
+            user: {
+                id: user.id,
+            },
+        };
+
+        jwt.sign(payload, jwtSecret, { expiresIn: 360000 }, (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
     }
   
 };
 
 
 exports.loginUser = async(req, res) => {
-    // const { email, password } = req.body;
-  
-    // // basic validation
-    // const result = loginSchema.validate({ email, password});
-    // if(!result.error) {
-    //     //check for existing user
-    //     User.findOne({ email }).then((user) => {
-    //         if (!user) return res.status(400).json({ errors: [{ msg: "Incorrect Email or Password" }] });
-    
-    //         // Validate password
-    //         bcrypt.compare(password, user.password).then((isMatch) => {
-    //             if (!isMatch) return res.status(400).json({ errors: [{ msg: "Incorrect Email or Password" }] });
-
-    //             const payload = {
-    //                 user: {
-    //                     id: user.id,
-    //                 },
-    //             };
-    
-    //             jwt.sign(payload, jwtSecret, { expiresIn: "5000" }, (err, token) => {
-    //                 if (err) throw err;
-	// 			    res.json({ token });
-    //             });
-    //         });
-    //     });
-    // } else {
-    //     console.log(result.error)
-    //     res.status(422).json({ errors: [{msg: result.error.details[0].message}] });
-    // }
     const { email, password } = req.body;
-
+    const errors = []
     try {
-        // See if user exists
+        const result = loginSchema.validate({ email, password});
+        if(result.error) {
+            result.error.details.forEach(error2 => {
+                errors.push({msg: error2.message})
+            });
+            return res
+                .status(400)
+                .json({ errors: errors });
+        }
+        
         let user = await User.findOne({ email });
 
         if (!user) {
@@ -162,12 +136,3 @@ exports.logoutUser = (req, res) => {
     });
 }
   
-
-exports.authChecker = (req, res) => {
-    const sessUser = req.session.user;
-    if (sessUser) {
-        return res.json(sessUser);
-    } else {
-        return res.status(401).json({ msg: "Unauthorized" });
-    }
-};
