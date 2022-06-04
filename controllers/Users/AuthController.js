@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 var jwtSecret = JWTSECRET;
 
 exports.auth2 = async (req, res) => {
-    console.log(req.user)
     try {
 		const user = await User.findById(req.user.id).select("-password");
 		res.json(user);
@@ -29,7 +28,6 @@ exports.registerUser = async (req, res) => {
             result.error.details.forEach(error2 => {
                 errors.push({msg: error2.message})
             });
-            console.log(errors)
             return res
                 .status(400)
                 .json({ errors: errors });

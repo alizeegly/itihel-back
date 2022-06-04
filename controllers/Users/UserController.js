@@ -1,4 +1,5 @@
 const User = require("../../models/Users/User");
+const Course = require("../../models/Courses/Course");
 
 exports.findOne = (req,res,next) => {
     try{
@@ -71,18 +72,12 @@ exports.privateCourses = (req,res,next) => {
 
 exports.courses = (req,res,next) => {
     try{
-        User.findById(req.params.id)
-            .populate({
-                path : 'courses',
-                // populate : {
-                //     path : 'categories'
-                // }
-            })
-            .exec(function(err, users) {
+        Course.find({owner_id: req.params.id})
+            .exec(function(err, courses) {
                 if(err) {
                     console.log(err)
                 } else {
-                    res.status(200).json(users)
+                    res.status(200).json(courses)
                 }
             })
     }catch(err){
