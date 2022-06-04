@@ -8,7 +8,7 @@ const auth = require("../../middlewares/auth");
 
 
 const { registerUser, loginUser, logoutUser, authChecker, auth2 } = require("../../controllers/Users/AuthController");
-const { findOne, publicCourses, deleteOne, updateOne, privateCourses, courses, all, loggedUser } = require("../../controllers/Users/UserController");
+const { findOne, publicCourses, deleteOne, updateOne, privateCourses, courses, all, loggedUser, sharedCourses } = require("../../controllers/Users/UserController");
 const { registerLimiter, loginLimiter } = require("../../utils/rateLimiter");
 
 
@@ -85,6 +85,12 @@ router.get("/:id/courses/private", privateCourses)
  */
 router.get("/me", loggedUser);
 
+/**
+ * @method - GET
+ * @description - Get shared courses of a user
+ * @param - /me
+ */
+router.get("/:id/courses/shared", sharedCourses);
 
 /**
  * @method - GET

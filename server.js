@@ -24,8 +24,8 @@ app.use(cors())
 
 // ROUTES
 app.use('/api/users', USER)
-// app.use('/api/courses', COURSES)
-// app.use('/api/courses-shared', SHARED)
+app.use('/api/courses', COURSES)
+app.use('/api/courses-shared', SHARED)
 // app.use('/api/flip-cards', FLIPCARDS)
 // app.use('/api/quizz', QUIZZ)
 
