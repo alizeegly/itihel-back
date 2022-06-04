@@ -38,19 +38,6 @@ exports.all = (req, res, next) => {
     }
 }
 
-exports.loggedUser = (req, res, next) => {
-    try {
-        const user = User.findById(req.session.user.id)
-        .populate('courses');
-        res.json(user);
-    } catch (e) {
-        res.send({
-            message: "Error in Fetching user"
-        });
-    }
-}
-
-
 
 // Courses
 exports.publicCourses = (req,res,next) => {
