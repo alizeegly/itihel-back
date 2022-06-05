@@ -29,10 +29,7 @@ const UserSchema = new mongoose.Schema({
     },
     last_connection: {
         type: Date
-    },
-    courses : [
-        {type: mongoose.Schema.Types.ObjectId,ref:'Course'}
-    ]
+    }
 }, {
     timestamps: true
 })

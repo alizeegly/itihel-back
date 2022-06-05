@@ -9,7 +9,8 @@ const {
     QUIZZ, 
     COURSES, 
     SHARED, 
-    FLIPCARDS
+    FLIPCARDS,
+    AUTH
 } = require("./routes")
 const { HOST, PORT } = require("./config/config");
 const connectDB = require('./config/connectDB');
@@ -24,6 +25,7 @@ app.use(cors())
 
 // ROUTES
 app.use('/api/users', USER)
+app.use('/api/auth', AUTH)
 app.use('/api/courses', COURSES)
 app.use('/api/courses-shared', SHARED)
 // app.use('/api/flip-cards', FLIPCARDS)

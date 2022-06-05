@@ -1,41 +1,22 @@
 const router = require('express').Router()
 const mongoose = require('mongoose');
+
 const Course = require("../../models/Courses/Course")
 const Quiz = require("../../models/Quizz/Quiz")
 const Category = require("../../models/Courses/Category")
 const CourseShared = require("../../models/Courses/CourseShared")
 const User = require("../../models/Users/User")
-const Role = require("../../models/Users/Role")
+const Role = require("../../models/Users/Role");
+
+const { createCourse } = require('../../controllers/Courses/CoursesController');
 
 /**
- * @method - POST
+ * @method - GET
  * @param - /
- * @description - Course create
+ * @description - Create a course
  */
-router.post("/", async (req, res) => {
-    try{
-        const newCourse = new Course(req.body)
-        newCourse.save()
-        
-        User.findOne({_id: mongoose.Types.ObjectId(req.body.owner_id)}, function(err, user) {
-            if (err) return console.log(err)
-            user.courses.push(newCourse._id)
-            user.save()
-        });
+router.post("/", createCourse );
 
-        const role_admin = await Role.findById("618702283f5059816c261d99")
-        const newCourseShared = new CourseShared({
-            course_id: newCourse._id,
-            user_id: newCourse.owner_id,
-            roles: [role_admin._id]
-        })
-        newCourseShared.save()
-        
-        res.redirect("/api/courses")
-    }catch(err){
-        res.status(500).json(err)
-    }
-})
 
 /**
  * @method - PUT

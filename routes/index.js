@@ -1,7 +1,8 @@
 module.exports = {
-    USER: require('./Users/users'),
+    USER: require('./Users/usersRoutes'),
+    AUTH: require('./Users/authRoutes'),
     QUIZZ: require('./Quizz/quizz'),
-    COURSES: require('./Courses/courses'),
-    SHARED: require('./Courses/courses_shared'),
+    COURSES: require('./Courses/coursesRoutes'),
+    SHARED: require('./Courses/coursesSharedRoutes'),
     FLIPCARDS: require('./FlipCards/flip_cards_questions')
 };
