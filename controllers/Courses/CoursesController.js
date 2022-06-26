@@ -23,15 +23,6 @@ exports.createCourse = async (req,res,next) => {
         const newCourse = new Course(req.body)
         await newCourse.save()
         
-        // User.findOne({_id: mongoose.Types.ObjectId(req.body.owner_id)}, function(err, user) {
-        //     if (err) return res
-        //         .status(400)
-        //         .json({ errors: err });
-        //     user.courses.push(newCourse._id)
-        //     user.save()
-        // });
-
-        // const role_admin = Role.findById("618702283f5059816c261d99")
         const newCourseShared = new CourseShared({
             course_id: newCourse._id,
             user_id: newCourse.owner_id,

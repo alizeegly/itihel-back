@@ -91,21 +91,24 @@ router.post("/", async (req, res) => {
  * @param - /:user and :course
  * @description - Get the roles of a user in a course
  */
- router.get("/:user/:course", async (req, res) => {
+router.get("/:user/:course", async (req, res) => {
     try{
        await CourseShared
             .find({user_id: req.params.user, course_id: req.params.course})
             .populate('roles')
-            .populate('course_id')
-            .populate('user_id')
             .exec(function(err, courses) {
                 if(err) {
                     console.log(err)
                 } else {
-                    res.status(200).json(courses)
+                    if(courses.length <= 0){
+                        res.status(200).json([])
+                    } else {
+                        res.status(200).json(courses[0].roles)
+                    }
                 }
             })
     } catch(err) {
+        console.log("ERROR !!!!!!!!!!!!!")
         res.status(500).json(err)
     }
 })
