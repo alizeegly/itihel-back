@@ -1,6 +1,7 @@
 const User = require("../../models/Users/User");
 const Course = require("../../models/Courses/Course");
 const CourseShared = require("../../models/Courses/CourseShared");
+const mongoose = require("mongoose");
 
 exports.findOne = (req,res,next) => {
     try{
@@ -109,7 +110,7 @@ exports.sharedCourses = (req, res, next) => {
                     console.log(err)
                 } else {
                     courses.forEach(courseShared => {
-                        if(!courseShared.roles.includes("618702283f5059816c261d99")){
+                        if(courseShared.roles.some(r => r.identifiant !== "ROLE_ADMIN")){
                             coursesArray.push(courseShared.course_id)
                         }
                     });

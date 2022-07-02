@@ -98,7 +98,7 @@ router.get("/:user/:course", async (req, res) => {
             .populate('roles')
             .exec(function(err, courses) {
                 if(err) {
-                    console.log(err)
+                    res.status(500).json(err)
                 } else {
                     if(courses.length <= 0){
                         res.status(200).json([])
@@ -108,7 +108,6 @@ router.get("/:user/:course", async (req, res) => {
                 }
             })
     } catch(err) {
-        console.log("ERROR !!!!!!!!!!!!!")
         res.status(500).json(err)
     }
 })
