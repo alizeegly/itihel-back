@@ -30,9 +30,9 @@ exports.deleteOne = (req,res,next) => {
     }
 };
 
-exports.all = (req, res, next) => {
+exports.all = async (req, res, next) => {
     try{
-        const users = User.find()
+        const users = await User.find({})
         res.status(200).json(users)
     } catch(err) {
         res.status(500).json(err)
