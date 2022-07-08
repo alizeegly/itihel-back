@@ -67,7 +67,13 @@ exports.registerUser = async (req, res) => {
 
         jwt.sign(payload, jwtSecret, { expiresIn: 360000 }, (err, token) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ 
+                _id: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                token: token
+            });
         });
     } catch (err) {
         console.error(err.message);
@@ -116,7 +122,14 @@ exports.loginUser = async(req, res) => {
 
         jwt.sign(payload, jwtSecret, { expiresIn: "5 days" }, (err, token) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({  
+                _id: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                pseudo: user.pseudo,
+                email: user.email,
+                token: token
+            });
         });
     } catch (err) {
         console.error(err.message);

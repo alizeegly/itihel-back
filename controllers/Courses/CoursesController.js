@@ -105,7 +105,7 @@ exports.getPublicCourses = async (req, res) => {
     let queryParams = req.query; // query params from FE
     let protectedKeys = ['text']; // protected keys == not searchable/filterable
     let populate = [
-        { path: 'owner_id', model: 'User' }
+        { path: 'owner_id', model: 'User', select: { '_id': 1, 'pseudo':1}, }
     ]
 
     try{
