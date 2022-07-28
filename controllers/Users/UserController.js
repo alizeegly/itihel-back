@@ -12,10 +12,24 @@ exports.findOne = (req,res,next) => {
     }
 };
 
-exports.updateOne = (req,res,next) => {
+exports.updateOne = async (req,res,next) => {
     try{
-        const updatedUser = User.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true})
-        res.status(200).json(updatedUser)
+        const user = await User.findById(req.params.id)
+        if (user) {
+            user.first_name = req.body.first_name;
+            user.last_name = req.body.last_name;
+            user.email = req.body.email;
+            user.pseudo = req.body.pseudo;
+            // if (req.body.password) {
+            //   user.password = req.body.password;
+            // }
+        
+            const updatedUser = await user.save();
+            console.log(updatedUser)
+            res.status(200).json(updatedUser);
+        } else {
+            res.json({msg: "User Not Found"});
+        }
     }catch(err){
         res.status(500).json(err)
     }
@@ -32,7 +46,7 @@ exports.deleteOne = (req,res,next) => {
 
 exports.all = async (req, res, next) => {
     try{
-        const users = await User.find({})
+        const users = await User.find({}).select({ "pseudo": 1, "_id": 0})
         res.status(200).json(users)
     } catch(err) {
         res.status(500).json(err)

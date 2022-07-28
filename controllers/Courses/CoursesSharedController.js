@@ -4,10 +4,18 @@ const CourseShared = require("../../models/Courses/CourseShared");
 const User = require("../../models/Users/User")
 
 exports.postSharedCourse = async (req, res) => {
-    const newCourse = new CourseShared(req.body)
+    console.log(req.body)
     try{
+        const user = await User.findOne({pseudo: req.body.user_id})
+        const courseShared = {
+            course_id: mongoose.Types.ObjectId(req.body.course_id),
+            user_id: mongoose.Types.ObjectId(user._id),
+            roles: req.body.roles
+        }
+        console.log(courseShared)
+        const newCourse = await CourseShared.create(courseShared)
         const savedCourse = await newCourse.save()
-        res.status(201).json(savedCourse)
+        res.status(201).json({msg: "Le cours a bien été partagé"})
     }catch(err){
         res.status(500).json(err)
     }

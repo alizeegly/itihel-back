@@ -19,31 +19,28 @@ exports.auth2 = async (req, res) => {
 
 exports.registerUser = async (req, res) => {
     const { first_name, last_name, pseudo, email, password } = req.body;
-    const errors = []
     
     try {
         const result = registerSchema.validate({ first_name, last_name, pseudo, email, password});
-    
-        if(result.error) {
-            result.error.details.forEach(error2 => {
-                errors.push({msg: error2.message})
-            });
+
+        if(result.error && result.error.details){
             return res
                 .status(400)
-                .json({ errors: errors });
+                .json({ msg: result.error.details[0].message });
         }
-        // See if user exists
-        let user = await User.findOne({
+
+        const userExists = await User.findOne({
             $or: [
                 {email: email},
                 {pseudo: pseudo}
             ]
         });
 
-        if (user) {
-            res.status(400).json({ errors: [{ msg: "Un compte existe déjà avec ce pseudo ou cet email" }] });
+        if (userExists) {
+            res.status(400).json({ msg: "Un compte existe déjà avec ce pseudo ou cet email" });
         }
-        user = new User({
+        
+        const user = await User.create({
             first_name,
             last_name,
             pseudo,
@@ -65,19 +62,20 @@ exports.registerUser = async (req, res) => {
             },
         };
 
-        jwt.sign(payload, jwtSecret, { expiresIn: 360000 }, (err, token) => {
+        jwt.sign(payload, jwtSecret, { expiresIn: "5 days" }, (err, token) => {
             if (err) throw err;
-            res.json({ 
+            res.json({  
                 _id: user._id,
                 first_name: user.first_name,
                 last_name: user.last_name,
+                pseudo: user.pseudo,
                 email: user.email,
                 token: token
             });
         });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server error");
+        res.status(500).send({msg: "Server error"});
     }
   
 };
@@ -88,13 +86,10 @@ exports.loginUser = async(req, res) => {
     const errors = []
     try {
         const result = loginSchema.validate({ email, password});
-        if(result.error) {
-            result.error.details.forEach(error2 => {
-                errors.push({msg: error2.message})
-            });
+        if(result.error && result.error.details){
             return res
                 .status(400)
-                .json({ errors: errors });
+                .json({ msg: result.error.details[0].message });
         }
         
         let user = await User.findOne({ email });
@@ -102,7 +97,7 @@ exports.loginUser = async(req, res) => {
         if (!user) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: "Email ou mot de passe introuvable" }] });
+                .json({ msg: "Email ou mot de passe introuvable" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -110,7 +105,7 @@ exports.loginUser = async(req, res) => {
         if (!isMatch) {
             return res
                 .status(400)
-                .json({ errors: [{ msg: "Email ou mot de passe introuvable" }] });
+                .json({ msg: "Email ou mot de passe introuvable" });
         }
 
         //Return jsonwebtoken

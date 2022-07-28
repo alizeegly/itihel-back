@@ -115,12 +115,12 @@ exports.getPublicCourses = async (req, res) => {
                     if (err) return next(err);
                     res.status(200).json(courses);
                 })
-            .then((courses) => {
-                res.status(200).json(courses);
-            })
-            .catch((err) => {
-                return next(err);
-            })
+            // .then((courses) => {
+            //     res.status(200).json(courses);
+            // })
+            // .catch((err) => {
+            //     return next(err);
+            // })
     } catch(err) {
         res.status(500).json(err)
     }
