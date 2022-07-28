@@ -1,7 +1,10 @@
 const FlipCard = require("../../models/FlipCards/FlipCard")
 
 exports.postFlipCard = async (req, res) => {
+
+
     const newFlipCard = new FlipCard(req.body)
+    
     try{
         const savedFlipCard = await newFlipCard.save()
         res.status(201).json(savedFlipCard)
